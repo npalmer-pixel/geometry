@@ -1,0 +1,670 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><title>Geometry Class Site</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: graph-paper ground, one centered reading column; breadcrumb > big title > content blocks; day pages end with prev/next. */
+:root {
+  --paper: #f7f9fc;
+  --grid: #e3e9f3;
+  --surface: #ffffff;
+  --ink: #16213a;
+  --muted: #5a6680;
+  --line: #d5ddea;
+  --accent: #2547c9;
+  --accent-soft: #e6ecfd;
+  --marker: #ffd84d;
+  --marker-ink: #3b2f00;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1524; --grid: #18213a; --surface: #161e33; --ink: #e7ecf7; --muted: #9aa6c2;
+    --line: #2a3654; --accent: #8ea6ff; --accent-soft: #1f2b52; --marker: #e8c33a; --marker-ink: #2a2100;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1524; --grid: #18213a; --surface: #161e33; --ink: #e7ecf7; --muted: #9aa6c2;
+  --line: #2a3654; --accent: #8ea6ff; --accent-soft: #1f2b52; --marker: #e8c33a; --marker-ink: #2a2100;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.wrap {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2rem, 6vw, 3rem); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 1.375rem; font-weight: 700; }
+p { margin: 0; }
+
+.site-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.125rem; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: .5rem; }
+.brand-mark { font-family: var(--font-mono); font-size: .8rem; background: var(--ink); color: var(--paper); padding: .15rem .45rem; border-radius: 4px; }
+.crumbs { font-size: .9rem; color: var(--muted); display: flex; gap: .4rem; flex-wrap: wrap; }
+.crumbs a { color: var(--muted); }
+
+.eyebrow { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.hero { display: flex; flex-direction: column; gap: .6rem; }
+.lede { color: var(--muted); max-width: 60ch; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; gap: .75rem; }
+.label { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.objective { font-family: var(--font-display); font-size: 1.375rem; font-weight: 700; line-height: 1.25; }
+.vocab { display: flex; flex-wrap: wrap; gap: .4rem; }
+.vocab span { font-family: var(--font-mono); font-size: .85rem; background: var(--accent-soft); color: var(--ink); padding: .2rem .55rem; border-radius: 4px; }
+
+.resources { display: grid; gap: .6rem; }
+.res {
+  display: grid; grid-template-columns: 7.5rem 1fr auto; gap: .75rem; align-items: center;
+  padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+  color: var(--ink); text-decoration: none;
+}
+.res .kind { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.res .name { min-width: 0; }
+.res .go { font-size: .85rem; color: var(--muted); white-space: nowrap; }
+a.res:hover { border-color: var(--accent); }
+a.res:hover .go { color: var(--accent); }
+.res.pending { opacity: .75; }
+@media (max-width: 520px) {
+  .res { grid-template-columns: 1fr auto; }
+  .res .kind { grid-column: 1 / -1; }
+}
+
+.event { background: var(--marker); color: var(--marker-ink); border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; gap: .4rem; }
+.event h2 { color: var(--marker-ink); }
+
+.week { display: flex; flex-direction: column; gap: .6rem; }
+.days { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.days li + li { border-top: 1px solid var(--line); }
+.days a { display: grid; grid-template-columns: 5rem 1fr auto; gap: .75rem; align-items: center; padding: .8rem 1rem; color: var(--ink); text-decoration: none; }
+.days a:hover { background: var(--accent-soft); }
+.days .num { font-family: var(--font-mono); font-size: .85rem; color: var(--muted); }
+.days .topic { min-width: 0; }
+.chip { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; padding: .15rem .5rem; border-radius: 4px; background: var(--marker); color: var(--marker-ink); }
+
+.units { display: grid; gap: .75rem; }
+.unit-card { display: flex; flex-direction: column; gap: .35rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); text-decoration: none; }
+.unit-card:hover { border-color: var(--accent); }
+.unit-card .meta { font-size: .9rem; color: var(--muted); }
+
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.pager a, .pager span { display: flex; flex-direction: column; gap: .15rem; padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); text-decoration: none; min-width: 0; }
+.pager a:hover { border-color: var(--accent); }
+.pager .next { text-align: right; }
+.pager small { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.pager span { visibility: hidden; }
+
+.units { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+.unit-card { flex-direction: row; align-items: center; gap: 1rem; }
+.unit-card .badge { flex: none; width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; }
+.unit-card .text { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.unit-card h2 { font-size: 1.125rem; }
+.chip.ext { background: var(--accent-soft); color: var(--accent); }
+.covers { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+.covers a { color: var(--marker-ink); font-weight: 700; }
+.covers span { font-family: var(--font-mono); font-size: .8rem; margin-right: .5rem; }
+.note { font-size: .95rem; color: var(--muted); }
+.foot { font-size: .85rem; color: var(--muted); }
+
+/* Video card */
+.video { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; padding: 1rem 1.1rem; border-radius: 10px; background: var(--ink); color: var(--paper); text-decoration: none; }
+.video .play { width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--marker); color: var(--marker-ink); display: grid; place-items: center; font-size: 1.1rem; }
+.video .vt { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+.video .vt small { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.video .go { font-size: .85rem; opacity: .8; white-space: nowrap; }
+.video:hover .go { opacity: 1; }
+.covers { gap: .5rem; }
+.covers { gap: .65rem; }
+.covers li { display: grid; grid-template-columns: 3.5rem 1fr; align-items: baseline; gap: .2rem 0; }
+.covers li > :not(span) { grid-column: 2; justify-self: start; }
+.covers .vid { font-family: var(--font-mono); font-size: .75rem; font-weight: 500; text-decoration: none; background: var(--ink); color: var(--paper); padding: .15rem .5rem; border-radius: 4px; }
+.covers .vid:hover { text-decoration: underline; }
+
+/* Teacher controls */
+.row { display: flex; align-items: stretch; }
+.row > a { flex: 1; min-width: 0; }
+.eye { flex: none; font: 600 .78rem var(--font-mono); letter-spacing: .04em; padding: .35rem .7rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; align-self: center; margin: 0 .6rem; }
+.eye[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.is-hidden { opacity: .5; }
+.is-hidden .topic::after, .is-hidden h2::after { content: " · hidden"; font-family: var(--font-mono); font-size: .75rem; color: var(--muted); }
+.units .row { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.units .row .unit-card { border: 0; background: none; }
+.resources .row { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.resources .row .res { border: 0; background: none; }
+.tpanel { border: 1px dashed var(--accent); border-radius: 10px; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .7rem; background: var(--surface); }
+.tpanel .label { color: var(--accent); }
+.field { display: flex; flex-direction: column; gap: .25rem; font-size: .9rem; }
+.field input[type="url"], .field input[type="text"] { font: inherit; padding: .5rem .6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); width: 100%; }
+.check { display: flex; gap: .5rem; align-items: center; font-size: .95rem; }
+.warn { font-size: .85rem; color: var(--muted); }
+.tbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--ink); color: var(--paper);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: .6rem calc(.6rem + env(safe-area-inset-bottom, 0px)); }
+.tbar-in { max-width: 46rem; margin: 0 auto; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; font-size: .9rem; }
+.tbar-in .msg { flex: 1; min-width: 10rem; }
+.tbar button { font: 700 .85rem var(--font-body); padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--paper); background: transparent; color: var(--paper); cursor: pointer; }
+.tbar button.primary { background: var(--marker); color: var(--marker-ink); border-color: var(--marker); }
+.tbar button:disabled { opacity: .5; cursor: default; }
+body.has-tbar .wrap { padding-bottom: 6rem; }
+/* Practice */
+.practice { margin: 0; padding-left: 1.6rem; display: grid; gap: .75rem; }
+.practice li { padding-left: .25rem; }
+.practice li::marker { font-family: var(--font-mono); color: var(--muted); }
+.practice details { margin-top: .3rem; }
+.practice summary { cursor: pointer; font-size: .9rem; color: var(--accent); font-weight: 700; width: fit-content; }
+.practice details p { margin-top: .35rem; padding: .6rem .8rem; border-radius: 6px; background: var(--accent-soft); }
+.pset { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: .8rem 1rem; }
+.pset > summary { cursor: pointer; font-weight: 700; display: flex; gap: .6rem; align-items: baseline; }
+.pset > summary span { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); font-weight: 500; flex: none; width: 3.5rem; }
+.pset[open] > summary { margin-bottom: .8rem; }
+.lcard { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: .9rem 1rem; display: flex; flex-direction: column; gap: .6rem; }
+.lhead { display: flex; gap: .6rem; align-items: baseline; }
+.lhead span { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); flex: none; width: 3.5rem; }
+.lhead h3 { font-size: 1.05rem; }
+.lhead h3 a { color: var(--ink); }
+.lcard .vid { align-self: flex-start; display: inline-flex; flex-wrap: wrap; gap: .25rem; font: 700 .85rem var(--font-body); text-decoration: none; background: var(--ink); color: var(--paper); padding: .45rem .75rem; border-radius: 6px; max-width: 100%; }
+.lcard .vid span { font-weight: 400; opacity: .8; }
+.lcard .vid:hover { text-decoration: underline; }
+.pq > summary { cursor: pointer; font-weight: 700; color: var(--accent); font-size: .92rem; width: fit-content; }
+.pq[open] > summary { margin-bottom: .6rem; }
+.gone { padding: 1.25rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+@media (prefers-reduced-motion: no-preference) {
+  main > * { animation: rise .25s ease-out both; }
+  @keyframes rise { from { transform: translateY(4px); opacity: .6; } to { transform: none; opacity: 1; } }
+}
+</style>
+
+<div class="wrap">
+  <header class="site-head">
+    <a class="brand" href="#home"><span class="brand-mark">△</span> Geometry</a>
+    <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+  </header>
+  <main id="app" class="wrap" style="padding:0;max-width:none"></main>
+  <footer class="foot">Questions about a lesson? Ask in class.</footer>
+</div>
+
+<script type="application/json" id="settings">{"hidden": {}, "videos": {"u1d1": {"url": "https://www.youtube.com/watch?v=nLntEXlDGEU", "title": "Intro to geometry: points, lines and planes", "live": true}, "u1d2": {"url": "https://www.youtube.com/watch?v=zHUj_SWZ3Rc", "title": "How to solve any segment addition problem", "live": true}, "u1d3": {"url": "https://www.youtube.com/watch?v=y0b2LweKg1g", "title": "Perimeter, circumference and area of polygons and circles", "live": true}, "u1d4": {"url": "https://www.youtube.com/watch?v=rBpsauKXPfs", "title": "Perimeter and area of a composite shape (Math with Mr. J)", "live": true}, "u1d5": {"url": "https://www.youtube.com/watch?v=ePvzgXzkk-Q", "title": "Area and perimeter in the coordinate plane", "live": true}, "u1d6": {"url": "https://www.youtube.com/watch?v=yw2cYaPb-Go", "title": "Area of shaded regions", "live": true}, "u1d7": {"url": "https://www.youtube.com/watch?v=EPhY1MapdaM", "title": "Geometric probability with areas", "live": true}, "u2d1": {"url": "https://www.youtube.com/watch?v=zGFa15G_vto", "title": "Angle Addition Postulate explained", "live": true}, "u2d2": {"url": "https://www.youtube.com/watch?v=HvjY6IzZFlE", "title": "How to solve any angle pair problem", "live": true}, "u2d3": {"url": "https://www.youtube.com/watch?v=RaQAhtdV7Pk", "title": "Parallel lines cut by a transversal", "live": true}, "u2d4": {"url": "https://www.youtube.com/watch?v=-Wd-FMLnaPY", "title": "Slopes of parallel and perpendicular lines", "live": true}, "u3d1": {"url": "https://www.youtube.com/watch?v=rfNcRh9AQHM", "title": "Triangle Angle-Sum and Exterior Angle Theorems", "live": true}, "u3d2": {"url": "https://www.youtube.com/watch?v=x4lShAI1yM0", "title": "Isosceles and equilateral triangles", "live": true}, "u3d3": {"url": "https://www.youtube.com/watch?v=djGtdbmnUE8", "title": "Rigid transformations and congruence", "live": true}, "u3d4": {"url": "https://www.youtube.com/watch?v=tTTtSueRnu0", "title": "Triangle congruence: SSS, SAS, ASA, AAS, HL", "live": true}, "u4d1": {"url": "https://www.youtube.com/watch?v=BCllaARDOWI", "title": "Dilations explained", "live": true}, "u4d2": {"url": "https://www.youtube.com/watch?v=gKbrcTIm3zI", "title": "Similar triangles: AA, SSS and SAS", "live": true}, "u4d3": {"url": "https://www.youtube.com/watch?v=ou8O0PyI22Y", "title": "Similar triangles: find the missing side", "live": true}}, "videoReplacesNotes": false, "videoPracticeOnly": true, "schedule": {"u4d1": "2026-11-04", "u4d2": "2026-11-06", "u4d3": "2026-11-10", "u5d1": "2026-11-19", "u5d2": "2026-12-03", "u5d3": "2026-12-08", "u5d4": "2027-01-06", "u5d5": "2027-01-14", "u5d6": "2027-01-25", "u6d1": "2027-02-02", "u6d2": "2027-02-08", "u6d3": "2027-02-17", "u6d4": "2027-02-19", "u7d1": "2027-03-03", "u7d2": "2027-03-08", "u7d3": "2027-03-11", "u7d4": "2027-03-17"}}</script>
+<script id="app-code">// Curriculum data is generated from the Geometry Unit Plans workbook. Answer keys, Do Now
+// templates, test documents and review guidance are left out on purpose: this site is for students.
+const UNITS = [{"id": "u1", "label": "1", "title": "Segments, Area, and Perimeter", "groupLabel": "Lessons", "days": [{"d": 1, "label": "Obj 1.1", "week": 1, "topic": "Points, lines and planes", "objective": "I can describe, name, identify, and draw basic geometric figures.", "language": "", "resources": [], "vocab": []}, {"d": 2, "label": "Obj 1.2", "week": 1, "topic": "Segment Addition Postulate", "objective": "I can apply the Segment Addition Postulate.", "language": "", "resources": [], "vocab": []}, {"d": 3, "label": "Obj 1.3", "week": 1, "topic": "Area, perimeter and circumference", "objective": "I can find and use the area and perimeter/circumference of polygons and circles.", "language": "", "resources": [], "vocab": []}, {"d": 4, "label": "Obj 1.4", "week": 1, "topic": "Composite shapes", "objective": "I can find the area and perimeter of composite shapes.", "language": "", "resources": [], "vocab": []}, {"d": 5, "label": "Obj 1.5", "week": 1, "topic": "Area and perimeter on the coordinate plane", "objective": "I can find and use the area and perimeter/circumference of polygons and circles on the coordinate plane.", "language": "", "resources": [], "vocab": []}, {"d": 6, "label": "Obj 1.6", "week": 1, "topic": "Area of shaded regions", "objective": "I can find the area of shaded regions.", "language": "", "resources": [], "vocab": []}, {"d": 7, "label": "Obj 1.7", "week": 1, "topic": "Geometric probability", "objective": "I can find geometric probabilities.", "language": "", "resources": [], "vocab": []}]}, {"id": "u2", "label": "2", "title": "Angle Relationships", "groupLabel": "Lessons", "days": [{"d": 1, "label": "Obj 2.1", "week": 1, "topic": "Angle Addition Postulate", "objective": "I can apply the Angle Addition Postulate.", "language": "", "resources": [], "vocab": []}, {"d": 2, "label": "Obj 2.2", "week": 1, "topic": "Angle relationships", "objective": "I can describe and apply the relationships of angles.", "language": "", "resources": [], "vocab": []}, {"d": 3, "label": "Obj 2.3", "week": 1, "topic": "Parallel lines and transversals", "objective": "I can apply the angle relationships formed when two lines are cut by a transversal.", "language": "", "resources": [], "vocab": []}, {"d": 4, "label": "Obj 2.4", "week": 1, "topic": "Slopes of parallel and perpendicular lines", "objective": "I can use slope criteria for parallel and perpendicular lines.", "language": "", "resources": [], "vocab": []}]}, {"id": "u3", "label": "3", "title": "Triangle Basics and Congruence", "groupLabel": "Lessons", "days": [{"d": 1, "label": "Obj 3.1", "week": 1, "topic": "Triangle theorems", "objective": "I can prove and apply theorems about triangles.", "language": "", "resources": [], "vocab": []}, {"d": 2, "label": "Obj 3.2", "week": 1, "topic": "Isosceles and equilateral triangles", "objective": "I can construct equilateral and isosceles triangles and use their properties.", "language": "", "resources": [], "vocab": []}, {"d": 3, "label": "Obj 3.3", "week": 1, "topic": "Congruence and rigid motions", "objective": "I can explain and apply congruence and the criteria for congruence in terms of rigid motions.", "language": "", "resources": [], "vocab": []}, {"d": 4, "label": "Obj 3.4", "week": 1, "topic": "Triangle congruence criteria", "objective": "I can apply the criteria for triangle congruence to solve problems.", "language": "", "resources": [], "vocab": []}]}, {"id": "u4", "label": "4", "title": "Similarity", "groupLabel": "Lessons", "days": [{"d": 1, "label": "Obj 4.1", "week": 1, "topic": "Dilations", "objective": "I can describe the properties of dilations as a non-rigid transformation.", "language": "", "resources": [], "vocab": []}, {"d": 2, "label": "Obj 4.2", "week": 1, "topic": "Similarity criteria", "objective": "I can explain and apply similarity and the criteria for similarity in terms of similarity transformations.", "language": "", "resources": [], "vocab": []}, {"d": 3, "label": "Obj 4.3", "week": 1, "topic": "Solving similarity problems", "objective": "I can solve problems about similarity.", "language": "", "resources": [], "vocab": []}]}, {"id": "u5", "label": "5", "title": "Right Triangles", "groupLabel": "Lessons", "days": [{"d": 1, "label": "Obj 5.1", "week": 1, "topic": "Pythagorean theorem", "objective": "I can use the Pythagorean theorem, including in contexts.", "language": "", "resources": [], "vocab": []}, {"d": 2, "label": "Obj 5.2", "week": 1, "topic": "Distance on the coordinate plane", "objective": "I can calculate and use the distance between two coordinates.", "language": "", "resources": [], "vocab": []}, {"d": 3, "label": "Obj 5.3", "week": 1, "topic": "Midpoint", "objective": "I can find the midpoint of a segment on the coordinate plane.", "language": "", "resources": [], "vocab": []}, {"d": 4, "label": "Obj 5.4", "week": 1, "topic": "Special right triangles", "objective": "I can find sides and angles in special right triangles.", "language": "", "resources": [], "vocab": []}, {"d": 5, "label": "Obj 5.5", "week": 1, "topic": "Trigonometry", "objective": "I can apply trigonometry to find sides and angles in right triangles.", "language": "", "resources": [], "vocab": []}, {"d": 6, "label": "Obj 5.6", "week": 1, "topic": "Trigonometry in context", "objective": "I can apply trigonometry in a variety of contexts and with cofunctions.", "language": "", "resources": [], "vocab": []}]}, {"id": "u6", "label": "6", "title": "Surface Area and Volume", "groupLabel": "Lessons", "days": [{"d": 1, "label": "Obj 6.1", "week": 1, "topic": "Area and surface area", "objective": "I can derive and use the formulas for area and surface area.", "language": "", "resources": [], "vocab": []}, {"d": 2, "label": "Obj 6.2", "week": 1, "topic": "Volume", "objective": "I can derive and use the formulas for volume.", "language": "", "resources": [], "vocab": []}, {"d": 3, "label": "Obj 6.3", "week": 1, "topic": "Scale factor, surface area and volume", "objective": "I can work with surface area and volume affected by scale factor and in contexts.", "language": "", "resources": [], "vocab": []}, {"d": 4, "label": "Obj 6.4", "week": 1, "topic": "Surface area and volume relationships", "objective": "I can use relationships between surface area and volume to compute other measures.", "language": "", "resources": [], "vocab": []}]}, {"id": "u7", "label": "7", "title": "Circles", "groupLabel": "Lessons", "days": [{"d": 1, "label": "Obj 7.1", "week": 1, "topic": "Angle relationships in circles", "objective": "I can use the various angle relationships in circles.", "language": "", "resources": [], "vocab": []}, {"d": 2, "label": "Obj 7.2", "week": 1, "topic": "Arc length and sectors", "objective": "I can find arc length and areas of sectors, including in context.", "language": "", "resources": [], "vocab": []}, {"d": 3, "label": "Obj 7.3", "week": 1, "topic": "Length relationships in circles", "objective": "I can use the various length relationships in circles.", "language": "", "resources": [], "vocab": []}, {"d": 4, "label": "Obj 7.4", "week": 1, "topic": "Equations of circles", "objective": "I can solve problems using the equations of circles.", "language": "", "resources": [], "vocab": []}]}];
+// Practice questions keyed by day id, each {q, a}. Answers open with a tap, so no script is needed for them.
+let PRACTICE = {"u1d1": [{"q": "Name the line that passes through points A and B in two ways.", "a": "Line AB or line BA (written with a double arrow over the letters)"}, {"q": "How many endpoints does a line have? A ray? A segment?", "a": "A line has 0, a ray has 1, and a segment has 2"}, {"q": "Is ray AB the same as ray BA? Explain.", "a": "No. Ray AB starts at A and goes through B. Ray BA starts at B and goes through A, so they point in opposite directions"}, {"q": "In ∠ABC, which point is the vertex?", "a": "B. The vertex is always the middle letter"}, {"q": "What do we call three or more points that lie on the same line?", "a": "Collinear points"}], "u1d2": [{"q": "B is between A and C. AB = 7 and BC = 12. Find AC.", "a": "AC = AB + BC = 7 + 12 = 19"}, {"q": "B is between A and C. AC = 30 and AB = 11. Find BC.", "a": "BC = AC − AB = 30 − 11 = 19"}, {"q": "B is between A and C. AB = 2x + 3, BC = 5x − 1 and AC = 37. Find x, AB and BC.", "a": "(2x + 3) + (5x − 1) = 37, so 7x + 2 = 37 and x = 5. AB = 13 and BC = 24"}, {"q": "M is the midpoint of AB. AM = 3x + 4 and MB = 5x − 6. Find x and AB.", "a": "A midpoint makes two equal parts: 3x + 4 = 5x − 6, so x = 5. AM = 19, so AB = 38"}, {"q": "B is between A and C. AB = x + 2, BC = 2x and AC = 5x − 10. Find AC.", "a": "(x + 2) + 2x = 5x − 10, so 3x + 2 = 5x − 10 and x = 6. AC = 5(6) − 10 = 20"}], "u1d3": [{"q": "Find the perimeter and area of a rectangle that is 9 cm by 4 cm.", "a": "Perimeter = 2(9) + 2(4) = 26 cm. Area = 9 × 4 = 36 cm²"}, {"q": "Find the area of a triangle with base 12 in and height 5 in.", "a": "Area = ½ × 12 × 5 = 30 in²"}, {"q": "Find the circumference and area of a circle with radius 6 m.", "a": "C = 2πr = 12π ≈ 37.7 m. A = πr² = 36π ≈ 113.1 m²"}, {"q": "Find the circumference and area of a circle with diameter 10 ft.", "a": "C = πd = 10π ≈ 31.4 ft. The radius is 5, so A = 25π ≈ 78.5 ft²"}, {"q": "A square has an area of 49 cm². What is its perimeter?", "a": "Each side is √49 = 7 cm, so the perimeter is 4 × 7 = 28 cm"}, {"q": "When do you use the radius and when the diameter in circle formulas?", "a": "Area uses the radius: A = πr². Circumference can use either: C = πd or C = 2πr. If you’re given the diameter, halve it to get the radius"}], "u1d4": [{"q": "An L-shape is made of a 10 × 4 rectangle and a 3 × 6 rectangle that don’t overlap. Find its area.", "a": "40 + 18 = 58 square units"}, {"q": "A figure is an 8 × 6 rectangle with a semicircle on one 6-unit side. Find its area.", "a": "Rectangle: 48. Semicircle radius 3: ½π(3²) = 4.5π ≈ 14.1. Total ≈ 62.1 square units"}, {"q": "For the same figure (8 × 6 rectangle with a semicircle on a 6-unit side), find the perimeter.", "a": "The straight sides are 8 + 6 + 8 = 22. Half the circle’s circumference is ½π(6) = 3π ≈ 9.4. Total ≈ 31.4 units"}, {"q": "A house shape is a 10 × 10 square with a triangle on top that has base 10 and height 4. Find its area.", "a": "100 + ½(10)(4) = 100 + 20 = 120 square units"}, {"q": "Why don’t you count the line where two shapes meet in the perimeter?", "a": "Perimeter is only the distance around the outside. The shared line is inside the figure"}], "u1d5": [{"q": "Find the distance between (1, 2) and (4, 6).", "a": "√((4 − 1)² + (6 − 2)²) = √(9 + 16) = √25 = 5"}, {"q": "Find the distance between (−2, 3) and (−2, −5).", "a": "The x-values match, so count vertically: 3 − (−5) = 8"}, {"q": "A rectangle has vertices (0, 0), (6, 0), (6, 4) and (0, 4). Find its perimeter and area.", "a": "Sides are 6 and 4. Perimeter = 20. Area = 24"}, {"q": "A triangle has vertices (0, 0), (8, 0) and (0, 6). Find its area and perimeter.", "a": "Area = ½ × 8 × 6 = 24. The third side is √(8² + 6²) = 10, so perimeter = 8 + 6 + 10 = 24"}, {"q": "Find the distance between (−1, −1) and (5, 7).", "a": "√(6² + 8²) = √(36 + 64) = √100 = 10"}], "u1d6": [{"q": "A circle with radius 5 sits inside a 10 × 10 square. Find the area of the shaded region outside the circle.", "a": "Square − circle = 100 − 25π ≈ 21.5 square units"}, {"q": "A 4 × 4 square is cut out of a 12 × 8 rectangle. Find the shaded area that remains.", "a": "96 − 16 = 80 square units"}, {"q": "A ring is made by a circle of radius 6 inside a circle of radius 10. Find the area of the ring.", "a": "100π − 36π = 64π ≈ 201.1 square units"}, {"q": "A triangle with base 10 and height 8 is inside a 10 × 8 rectangle. Find the shaded area outside the triangle.", "a": "80 − 40 = 40 square units"}, {"q": "What is the general strategy for finding the area of a shaded region?", "a": "Find the area of the whole figure, then subtract the area of the unshaded part"}], "u1d7": [{"q": "A dart lands at random on a 10 × 10 board with a circle of radius 3 inside. What is the probability it lands in the circle?", "a": "Circle area ÷ board area = 9π/100 ≈ 0.28, about 28%"}, {"q": "A point is chosen at random on segment AC, which is 20 long. AB = 5. What is the probability the point is on AB?", "a": "5/20 = 1/4 = 25%"}, {"q": "A 6 × 6 square sits inside a 12 × 10 rectangle. What is the probability a random point lands in the square?", "a": "36/120 = 0.3 = 30%"}, {"q": "A target has radius 10 and a bullseye with radius 2. What is the probability of hitting the bullseye?", "a": "4π/100π = 1/25 = 4%"}, {"q": "Explain how to find a geometric probability using area.", "a": "Divide the area of the region you want by the total area. The answer is always between 0 and 1"}], "u2d1": [{"q": "D is in the interior of ∠ABC. m∠ABD = 25° and m∠DBC = 40°. Find m∠ABC.", "a": "25° + 40° = 65°"}, {"q": "m∠ABC = 120° and m∠ABD = 85°. Find m∠DBC.", "a": "120° − 85° = 35°"}, {"q": "m∠ABC = 90°, m∠ABD = 3x and m∠DBC = 2x + 15. Find x and both angles.", "a": "3x + 2x + 15 = 90, so 5x = 75 and x = 15. The angles are 45° and 45°"}, {"q": "BD bisects ∠ABC. m∠ABD = 4x + 2 and m∠DBC = 6x − 12. Find m∠ABC.", "a": "A bisector makes equal angles: 4x + 2 = 6x − 12, so x = 7. Each angle is 30°, so m∠ABC = 60°"}, {"q": "What does it mean for a ray to bisect an angle?", "a": "It divides the angle into two congruent (equal) angles"}], "u2d2": [{"q": "Two angles are complementary. One measures 35°. Find the other.", "a": "90° − 35° = 55°"}, {"q": "Two angles are supplementary. One measures 112°. Find the other.", "a": "180° − 112° = 68°"}, {"q": "Vertical angles measure 3x + 10 and 5x − 20. Find x and the angle.", "a": "Vertical angles are congruent: 3x + 10 = 5x − 20, so x = 15. Each angle is 55°"}, {"q": "Two angles form a linear pair: 2x and 4x + 30. Find both angles.", "a": "2x + 4x + 30 = 180, so 6x = 150 and x = 25. The angles are 50° and 130°"}, {"q": "Complementary angles measure x + 10 and 2x + 20. Find both angles.", "a": "3x + 30 = 90, so x = 20. The angles are 30° and 60°"}], "u2d3": [{"q": "Two parallel lines are cut by a transversal. One angle is 70°. Find its corresponding angle.", "a": "Corresponding angles are congruent: 70°"}, {"q": "Same-side interior angles: one measures 115°. Find the other.", "a": "Same-side interior angles are supplementary: 180° − 115° = 65°"}, {"q": "Alternate interior angles measure 3x + 5 and 5x − 25. Find x and the angle.", "a": "They are congruent: 3x + 5 = 5x − 25, so x = 15. Each angle is 50°"}, {"q": "Same-side interior angles measure 2x and 3x + 30. Find both angles.", "a": "2x + 3x + 30 = 180, so x = 30. The angles are 60° and 120°"}, {"q": "Which angle pairs are congruent when parallel lines are cut by a transversal, and which are supplementary?", "a": "Congruent: corresponding, alternate interior, alternate exterior and vertical angles. Supplementary: same-side interior angles and linear pairs"}], "u2d4": [{"q": "A line has slope 3. What is the slope of a parallel line? A perpendicular line?", "a": "Parallel: 3. Perpendicular: −1/3 (the opposite reciprocal)"}, {"q": "What is the slope of a line perpendicular to y = −(2/5)x + 1?", "a": "5/2"}, {"q": "Are y = 4x + 1 and y = −(1/4)x − 3 parallel, perpendicular, or neither?", "a": "Perpendicular. The slopes 4 and −1/4 are opposite reciprocals (their product is −1)"}, {"q": "Write the equation of the line parallel to y = 2x + 5 through (1, 4).", "a": "Slope 2. 4 = 2(1) + b, so b = 2. y = 2x + 2"}, {"q": "Write the equation of the line perpendicular to y = 3x − 2 through (6, 1).", "a": "Slope −1/3. 1 = −(1/3)(6) + b, so 1 = −2 + b and b = 3. y = −(1/3)x + 3"}], "u3d1": [{"q": "Two angles of a triangle are 50° and 60°. Find the third angle.", "a": "180° − 50° − 60° = 70°"}, {"q": "The angles of a triangle are x, 2x and 3x. Find each angle.", "a": "6x = 180, so x = 30. The angles are 30°, 60° and 90°"}, {"q": "The two remote interior angles of a triangle are 40° and 65°. Find the exterior angle.", "a": "Exterior angle = sum of the remote interior angles = 105°"}, {"q": "An exterior angle is 4x + 10. The remote interior angles are 50° and 2x + 20. Find the exterior angle.", "a": "4x + 10 = 50 + 2x + 20, so 2x = 60 and x = 30. The exterior angle is 130°"}, {"q": "Can a triangle have sides of 3, 4 and 8? Explain.", "a": "No. The two shorter sides must add to more than the longest side, but 3 + 4 = 7 is less than 8"}, {"q": "Can a triangle have two right angles? Explain.", "a": "No. 90° + 90° = 180°, which leaves 0° for the third angle"}], "u3d2": [{"q": "An isosceles triangle has a vertex angle of 40°. Find each base angle.", "a": "(180 − 40) ÷ 2 = 70° each"}, {"q": "An isosceles triangle has base angles of 52°. Find the vertex angle.", "a": "180 − 2(52) = 76°"}, {"q": "What is the measure of each angle of an equilateral triangle?", "a": "60°, because 180 ÷ 3 = 60"}, {"q": "The legs of an isosceles triangle are 3x + 1 and 5x − 7. Find the length of each leg.", "a": "Legs are equal: 3x + 1 = 5x − 7, so x = 4. Each leg is 13"}, {"q": "An equilateral triangle has sides 2x + 4 and 4x − 6. Find the perimeter.", "a": "2x + 4 = 4x − 6, so x = 5. Each side is 14, so the perimeter is 42"}], "u3d3": [{"q": "Which transformations are rigid motions?", "a": "Translations, reflections and rotations. They keep size and shape the same. A dilation is not a rigid motion"}, {"q": "Reflect the point (2, 5) over the x-axis.", "a": "(2, −5)"}, {"q": "Translate the point (3, −1) 4 units left and 2 units up.", "a": "(−1, 1)"}, {"q": "Rotate the point (4, 2) 180° about the origin.", "a": "(−4, −2)"}, {"q": "△ABC ≅ △DEF. Which angle matches ∠B? Which side matches AC?", "a": "∠E matches ∠B. DF matches AC. Match the letters in order"}], "u3d4": [{"q": "Two triangles have all three pairs of sides congruent. Which criterion proves them congruent?", "a": "SSS"}, {"q": "Two sides and the angle between them are congruent. Which criterion?", "a": "SAS"}, {"q": "Two angles and the side between them are congruent. Which criterion?", "a": "ASA"}, {"q": "Two angles and a side that is NOT between them are congruent. Which criterion?", "a": "AAS"}, {"q": "Two right triangles have congruent hypotenuses and one pair of congruent legs. Which criterion?", "a": "HL (hypotenuse-leg)"}, {"q": "Why doesn’t AAA prove two triangles congruent?", "a": "Two triangles can have the same angles but different sizes. They are similar, not necessarily congruent"}], "u4d1": [{"q": "Dilate (2, 3) by a scale factor of 3 centered at the origin.", "a": "Multiply both coordinates by 3: (6, 9)"}, {"q": "Dilate (8, −4) by a scale factor of ½ centered at the origin.", "a": "(4, −2)"}, {"q": "A segment is 5 cm long. What is its length after a dilation with scale factor 4?", "a": "5 × 4 = 20 cm"}, {"q": "A side of the preimage is 12 and the matching side of the image is 9. Find the scale factor. Is it an enlargement or a reduction?", "a": "9 ÷ 12 = 3/4. It is a reduction, because the scale factor is less than 1"}, {"q": "Does a dilation change the angle measures of a figure?", "a": "No. Angles stay the same, and side lengths change by the scale factor. That’s why a dilation is not a rigid motion"}], "u4d2": [{"q": "Two triangles each have angles of 40° and 60°. Are they similar? Which criterion?", "a": "Yes, by AA (two pairs of congruent angles)"}, {"q": "Triangle 1 has sides 3, 4, 5 and triangle 2 has sides 6, 8, 10. Are they similar?", "a": "Yes, by SSS similarity. Every ratio is 2"}, {"q": "One triangle has angles 40° and 60°. Another has angles 40° and 80°. Are they similar?", "a": "Yes. The third angles are 80° and 60°, so both triangles have angles 40°, 60° and 80° (AA)"}, {"q": "Triangle 1 has sides 2, 3, 4 and triangle 2 has sides 4, 6, 9. Are they similar?", "a": "No. 2/4 and 3/6 are ½, but 4/9 is not ½"}, {"q": "What is the difference between similar and congruent triangles?", "a": "Congruent triangles have the same shape and size. Similar triangles have the same shape (equal angles) but can be different sizes (proportional sides)"}], "u4d3": [{"q": "△ABC ~ △DEF. AB = 6, DE = 9 and BC = 8. Find EF.", "a": "Scale factor 9/6 = 1.5, so EF = 8 × 1.5 = 12"}, {"q": "A 5-ft person casts a 3-ft shadow. At the same time, a flagpole casts an 18-ft shadow. How tall is the flagpole?", "a": "5/3 = h/18, so h = 30 ft"}, {"q": "In △ABC, DE ∥ BC with D on AB and E on AC. AD = 4, DB = 6 and AE = 5. Find EC.", "a": "Side-splitter: 4/6 = 5/EC, so EC = 7.5"}, {"q": "Two similar triangles have a scale factor of 2/3 (small to large). The larger perimeter is 36. Find the smaller perimeter.", "a": "36 × 2/3 = 24"}, {"q": "Is the proportion 4/6 = 10/15 true? Explain how you check.", "a": "Yes. Cross multiply: 4 × 15 = 60 and 6 × 10 = 60"}]};
+// The page markup above this script, kept here so the page can republish itself with new settings.
+const SHELL = "<title>Geometry Class Site<\/title>\n<meta name=\"claude:viewport-fit-sides\" content=\"cover\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap\">\n<style>\n/* Layout: graph-paper ground, one centered reading column; breadcrumb > big title > content blocks; day pages end with prev/next. */\n:root {\n  --paper: #f7f9fc;\n  --grid: #e3e9f3;\n  --surface: #ffffff;\n  --ink: #16213a;\n  --muted: #5a6680;\n  --line: #d5ddea;\n  --accent: #2547c9;\n  --accent-soft: #e6ecfd;\n  --marker: #ffd84d;\n  --marker-ink: #3b2f00;\n  --font-display: \"Bricolage Grotesque\", \"Segoe UI\", system-ui, sans-serif;\n  --font-body: \"Atkinson Hyperlegible\", \"Segoe UI\", system-ui, sans-serif;\n  --font-mono: \"JetBrains Mono\", ui-monospace, \"SFMono-Regular\", Menlo, monospace;\n}\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme=\"light\"]) {\n    --paper: #0f1524; --grid: #18213a; --surface: #161e33; --ink: #e7ecf7; --muted: #9aa6c2;\n    --line: #2a3654; --accent: #8ea6ff; --accent-soft: #1f2b52; --marker: #e8c33a; --marker-ink: #2a2100;\n    color-scheme: dark;\n  }\n}\n:root[data-theme=\"dark\"] {\n  --paper: #0f1524; --grid: #18213a; --surface: #161e33; --ink: #e7ecf7; --muted: #9aa6c2;\n  --line: #2a3654; --accent: #8ea6ff; --accent-soft: #1f2b52; --marker: #e8c33a; --marker-ink: #2a2100;\n  color-scheme: dark;\n}\n\n* { box-sizing: border-box; }\nbody {\n  background-color: var(--paper);\n  background-image:\n    linear-gradient(var(--grid) 1px, transparent 1px),\n    linear-gradient(90deg, var(--grid) 1px, transparent 1px);\n  background-size: 24px 24px;\n  color: var(--ink);\n  font-family: var(--font-body);\n  font-size: 1.0625rem;\n  line-height: 1.55;\n}\n.wrap {\n  max-width: 46rem;\n  margin: 0 auto;\n  padding-left: max(16px, env(safe-area-inset-left, 0px));\n  padding-right: max(16px, env(safe-area-inset-right, 0px));\n  padding-block: 1.5rem 4rem;\n  display: flex;\n  flex-direction: column;\n  gap: 1.75rem;\n}\na { color: var(--accent); }\na:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }\nh1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; }\nh1 { font-size: clamp(2rem, 6vw, 3rem); font-weight: 800; letter-spacing: -0.01em; }\nh2 { font-size: 1.375rem; font-weight: 700; }\np { margin: 0; }\n\n.site-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }\n.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.125rem; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: .5rem; }\n.brand-mark { font-family: var(--font-mono); font-size: .8rem; background: var(--ink); color: var(--paper); padding: .15rem .45rem; border-radius: 4px; }\n.crumbs { font-size: .9rem; color: var(--muted); display: flex; gap: .4rem; flex-wrap: wrap; }\n.crumbs a { color: var(--muted); }\n\n.eyebrow { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }\n.hero { display: flex; flex-direction: column; gap: .6rem; }\n.lede { color: var(--muted); max-width: 60ch; }\n\n.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; gap: .75rem; }\n.label { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }\n.objective { font-family: var(--font-display); font-size: 1.375rem; font-weight: 700; line-height: 1.25; }\n.vocab { display: flex; flex-wrap: wrap; gap: .4rem; }\n.vocab span { font-family: var(--font-mono); font-size: .85rem; background: var(--accent-soft); color: var(--ink); padding: .2rem .55rem; border-radius: 4px; }\n\n.resources { display: grid; gap: .6rem; }\n.res {\n  display: grid; grid-template-columns: 7.5rem 1fr auto; gap: .75rem; align-items: center;\n  padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);\n  color: var(--ink); text-decoration: none;\n}\n.res .kind { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }\n.res .name { min-width: 0; }\n.res .go { font-size: .85rem; color: var(--muted); white-space: nowrap; }\na.res:hover { border-color: var(--accent); }\na.res:hover .go { color: var(--accent); }\n.res.pending { opacity: .75; }\n@media (max-width: 520px) {\n  .res { grid-template-columns: 1fr auto; }\n  .res .kind { grid-column: 1 / -1; }\n}\n\n.event { background: var(--marker); color: var(--marker-ink); border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; gap: .4rem; }\n.event h2 { color: var(--marker-ink); }\n\n.week { display: flex; flex-direction: column; gap: .6rem; }\n.days { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }\n.days li + li { border-top: 1px solid var(--line); }\n.days a { display: grid; grid-template-columns: 5rem 1fr auto; gap: .75rem; align-items: center; padding: .8rem 1rem; color: var(--ink); text-decoration: none; }\n.days a:hover { background: var(--accent-soft); }\n.days .num { font-family: var(--font-mono); font-size: .85rem; color: var(--muted); }\n.days .topic { min-width: 0; }\n.chip { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; padding: .15rem .5rem; border-radius: 4px; background: var(--marker); color: var(--marker-ink); }\n\n.units { display: grid; gap: .75rem; }\n.unit-card { display: flex; flex-direction: column; gap: .35rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); text-decoration: none; }\n.unit-card:hover { border-color: var(--accent); }\n.unit-card .meta { font-size: .9rem; color: var(--muted); }\n\n.pager { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }\n.pager a, .pager span { display: flex; flex-direction: column; gap: .15rem; padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); text-decoration: none; min-width: 0; }\n.pager a:hover { border-color: var(--accent); }\n.pager .next { text-align: right; }\n.pager small { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }\n.pager span { visibility: hidden; }\n\n.units { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }\n.unit-card { flex-direction: row; align-items: center; gap: 1rem; }\n.unit-card .badge { flex: none; width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; }\n.unit-card .text { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }\n.unit-card h2 { font-size: 1.125rem; }\n.chip.ext { background: var(--accent-soft); color: var(--accent); }\n.covers { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }\n.covers a { color: var(--marker-ink); font-weight: 700; }\n.covers span { font-family: var(--font-mono); font-size: .8rem; margin-right: .5rem; }\n.note { font-size: .95rem; color: var(--muted); }\n.foot { font-size: .85rem; color: var(--muted); }\n\n/* Video card */\n.video { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; padding: 1rem 1.1rem; border-radius: 10px; background: var(--ink); color: var(--paper); text-decoration: none; }\n.video .play { width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--marker); color: var(--marker-ink); display: grid; place-items: center; font-size: 1.1rem; }\n.video .vt { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }\n.video .vt small { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }\n.video .go { font-size: .85rem; opacity: .8; white-space: nowrap; }\n.video:hover .go { opacity: 1; }\n.covers { gap: .5rem; }\n.covers { gap: .65rem; }\n.covers li { display: grid; grid-template-columns: 3.5rem 1fr; align-items: baseline; gap: .2rem 0; }\n.covers li > :not(span) { grid-column: 2; justify-self: start; }\n.covers .vid { font-family: var(--font-mono); font-size: .75rem; font-weight: 500; text-decoration: none; background: var(--ink); color: var(--paper); padding: .15rem .5rem; border-radius: 4px; }\n.covers .vid:hover { text-decoration: underline; }\n\n/* Teacher controls */\n.row { display: flex; align-items: stretch; }\n.row > a { flex: 1; min-width: 0; }\n.eye { flex: none; font: 600 .78rem var(--font-mono); letter-spacing: .04em; padding: .35rem .7rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; align-self: center; margin: 0 .6rem; }\n.eye[aria-pressed=\"true\"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }\n.is-hidden { opacity: .5; }\n.is-hidden .topic::after, .is-hidden h2::after { content: \" · hidden\"; font-family: var(--font-mono); font-size: .75rem; color: var(--muted); }\n.units .row { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }\n.units .row .unit-card { border: 0; background: none; }\n.resources .row { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }\n.resources .row .res { border: 0; background: none; }\n.tpanel { border: 1px dashed var(--accent); border-radius: 10px; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .7rem; background: var(--surface); }\n.tpanel .label { color: var(--accent); }\n.field { display: flex; flex-direction: column; gap: .25rem; font-size: .9rem; }\n.field input[type=\"url\"], .field input[type=\"text\"] { font: inherit; padding: .5rem .6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); width: 100%; }\n.check { display: flex; gap: .5rem; align-items: center; font-size: .95rem; }\n.warn { font-size: .85rem; color: var(--muted); }\n.tbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--ink); color: var(--paper);\n  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));\n  padding-block: .6rem calc(.6rem + env(safe-area-inset-bottom, 0px)); }\n.tbar-in { max-width: 46rem; margin: 0 auto; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; font-size: .9rem; }\n.tbar-in .msg { flex: 1; min-width: 10rem; }\n.tbar button { font: 700 .85rem var(--font-body); padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--paper); background: transparent; color: var(--paper); cursor: pointer; }\n.tbar button.primary { background: var(--marker); color: var(--marker-ink); border-color: var(--marker); }\n.tbar button:disabled { opacity: .5; cursor: default; }\nbody.has-tbar .wrap { padding-bottom: 6rem; }\n/* Practice */\n.practice { margin: 0; padding-left: 1.6rem; display: grid; gap: .75rem; }\n.practice li { padding-left: .25rem; }\n.practice li::marker { font-family: var(--font-mono); color: var(--muted); }\n.practice details { margin-top: .3rem; }\n.practice summary { cursor: pointer; font-size: .9rem; color: var(--accent); font-weight: 700; width: fit-content; }\n.practice details p { margin-top: .35rem; padding: .6rem .8rem; border-radius: 6px; background: var(--accent-soft); }\n.pset { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: .8rem 1rem; }\n.pset > summary { cursor: pointer; font-weight: 700; display: flex; gap: .6rem; align-items: baseline; }\n.pset > summary span { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); font-weight: 500; flex: none; width: 3.5rem; }\n.pset[open] > summary { margin-bottom: .8rem; }\n.lcard { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: .9rem 1rem; display: flex; flex-direction: column; gap: .6rem; }\n.lhead { display: flex; gap: .6rem; align-items: baseline; }\n.lhead span { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); flex: none; width: 3.5rem; }\n.lhead h3 { font-size: 1.05rem; }\n.lhead h3 a { color: var(--ink); }\n.lcard .vid { align-self: flex-start; display: inline-flex; flex-wrap: wrap; gap: .25rem; font: 700 .85rem var(--font-body); text-decoration: none; background: var(--ink); color: var(--paper); padding: .45rem .75rem; border-radius: 6px; max-width: 100%; }\n.lcard .vid span { font-weight: 400; opacity: .8; }\n.lcard .vid:hover { text-decoration: underline; }\n.pq > summary { cursor: pointer; font-weight: 700; color: var(--accent); font-size: .92rem; width: fit-content; }\n.pq[open] > summary { margin-bottom: .6rem; }\n.gone { padding: 1.25rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }\n@media (prefers-reduced-motion: no-preference) {\n  main > * { animation: rise .25s ease-out both; }\n  @keyframes rise { from { transform: translateY(4px); opacity: .6; } to { transform: none; opacity: 1; } }\n}\n<\/style>\n\n<div class=\"wrap\">\n  <header class=\"site-head\">\n    <a class=\"brand\" href=\"#home\"><span class=\"brand-mark\">△<\/span> Geometry<\/a>\n    <nav class=\"crumbs\" id=\"crumbs\" aria-label=\"Breadcrumb\"><\/nav>\n  <\/header>\n  <main id=\"app\" class=\"wrap\" style=\"padding:0;max-width:none\"><\/main>\n  <footer class=\"foot\">Questions about a lesson? Ask in class.<\/footer>\n<\/div>\n\n";
+// Google Sheet that controls what students see. When set, the site reads it on every visit and
+// falls back to the settings built into this page if the sheet can't be reached.
+const SHEET_ID = "";
+const SKELETON = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>';
+
+const SUMMARY = {
+  u1: "Points, lines and segments, the Segment Addition Postulate, area and perimeter, composite shapes, shaded regions and geometric probability.",
+  u2: "The Angle Addition Postulate, angle pair relationships, parallel lines cut by a transversal, and slopes of parallel and perpendicular lines.",
+  u3: "Triangle angle theorems, isosceles and equilateral triangles, rigid motions, and proving triangles congruent.",
+  u4: "Dilations, similarity criteria, and solving problems with similar triangles.",
+  u5: "The Pythagorean theorem, distance and midpoint, special right triangles, and trigonometry.",
+  u6: "Area, surface area and volume, and how scale factor changes them.",
+  u7: "Angles, arcs, sectors and lengths in circles, and equations of circles."
+};
+
+// Settings: what is hidden from students and which lessons have a video. Saved inside the page.
+function readSettings() {
+  try {
+    const s = JSON.parse(document.getElementById("settings").textContent);
+    return { hidden: s.hidden || {}, videos: s.videos || {}, videoReplacesNotes: !!s.videoReplacesNotes, videoPracticeOnly: !!s.videoPracticeOnly, schedule: s.schedule || {} };
+  } catch { return { hidden: {}, videos: {}, videoReplacesNotes: false, videoPracticeOnly: false, schedule: {} }; }
+}
+let saved = readSettings();
+let draft = structuredClone(saved);
+let teacher = { allowed: false, on: false, saving: false, artifact: null, error: "" };
+
+const ss = {
+  get(k) { try { return sessionStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch {} }
+};
+
+const app = document.getElementById("app");
+const crumbs = document.getElementById("crumbs");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const dayId = (u, day) => `${u.id}d${day.d}`;
+const isLesson = day => !day.event && !day.extension;
+const S = () => teacher.on ? draft : saved;   // teacher view previews unsaved changes
+
+// Scheduled lessons open at 6:00 am Chicago time on their date.
+function chicagoNow() {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" })
+    .formatToParts(new Date()).map(x => [x.type, x.value]));
+  return { date: `${p.year}-${p.month}-${p.day}`, hour: +p.hour };
+}
+const notOpenYet = id => {
+  const d = S().schedule?.[id];
+  if (!d) return false;
+  const now = chicagoNow();
+  return now.date < d || (now.date === d && now.hour < 6);
+};
+const opensLabel = id => new Date(S().schedule[id] + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+const unitHidden = u => !!S().hidden[u.id];
+// In video-and-practice mode, a lesson with neither has nothing to show yet, so it stays hidden.
+const empty = (u, day) => S().videoPracticeOnly && !day.event && !(S().videos[dayId(u, day)]?.live) && !PRACTICE[dayId(u, day)];
+const dayClosed = (u, day) => !!S().hidden[dayId(u, day)] || notOpenYet(dayId(u, day)) || empty(u, day);
+const dayHidden = (u, day) => unitHidden(u) || dayClosed(u, day);
+// Students see a unit only once at least one of its days is open.
+const unitShown = u => teacher.on || (!unitHidden(u) && u.days.some(d => !dayClosed(u, d)));
+const liveVideo = (u, day) => { const v = S().videos[dayId(u, day)]; return v && v.url && v.live ? v : null; };
+const resHidden = (u, day, r) => !!S().hidden[`${dayId(u, day)}:${r.kind}`] ||
+  (S().videoReplacesNotes && r.kind === "Notes" && !!liveVideo(u, day));
+// Students never see hidden things; the teacher sees them dimmed.
+const shows = hidden => teacher.on || !hidden;
+
+const dirty = () => JSON.stringify(draft) !== JSON.stringify(saved);
+function setHidden(key, value) {
+  if (value) draft.hidden[key] = true; else delete draft.hidden[key];
+  ss.set("draft", JSON.stringify(draft));
+  route(false);
+}
+const eye = (key, hidden, what) => teacher.on
+  ? `<button type="button" class="eye" data-key="${esc(key)}" aria-pressed="${hidden}" aria-label="${hidden ? "Show" : "Hide"} ${esc(what)} for students">${hidden ? "Hidden" : "Visible"}</button>`
+  : "";
+
+function coveredBy(u, day) {
+  const i = u.days.indexOf(day);
+  if (day.event === "quiz") {
+    const out = [];
+    for (let j = i - 1; j >= 0 && u.days[j].event !== "quiz"; j--) if (isLesson(u.days[j])) out.unshift(u.days[j]);
+    return out;
+  }
+  return u.days.slice(0, i).filter(isLesson);
+}
+
+function renderHome() {
+  crumbs.innerHTML = "";
+  document.title = "Geometry Class Site";
+  const units = UNITS.filter(unitShown);
+  app.innerHTML = `
+    <section class="hero">
+      <p class="eyebrow">Geometry</p>
+      <h1>Class lessons</h1>
+      <p class="lede">${S().videoPracticeOnly ? "Pick a unit, then a lesson, to watch its video and try the practice questions." : "Pick a unit, then a day, to find that day’s objective, video, notes, homework and exit ticket."}</p>
+    </section>
+    ${teacher.on ? `
+    <section class="tpanel">
+      <p class="label">Teacher settings</p>
+      <label class="check"><input type="checkbox" id="opt-video-only" ${draft.videoPracticeOnly ? "checked" : ""}> Lesson pages show only the video and practice questions</label>
+      <label class="check"><input type="checkbox" id="opt-replace-notes" ${draft.videoReplacesNotes ? "checked" : ""}> When a lesson has a video that students can see, hide its notes</label>
+    </section>` : ""}
+    <section class="units">
+      ${units.map(u => `
+        <div class="row ${unitHidden(u) ? "is-hidden" : ""}">
+          <a class="unit-card" href="#${u.id}">
+            <span class="badge" aria-hidden="true">${esc(u.label)}</span>
+            <span class="text">
+              <span class="eyebrow">Unit ${esc(u.label)}</span>
+              <h2>${esc(u.title)}</h2>
+              <span class="meta">${u.days.filter(d => !d.extension).length} days</span>
+            </span>
+          </a>
+          ${eye(u.id, unitHidden(u), "Unit " + u.label)}
+        </div>`).join("")}
+    </section>`;
+}
+
+function renderUnit(u) {
+  crumbs.innerHTML = `<a href="#home">Home</a><span>/</span><span>Unit ${esc(u.label)}</span>`;
+  document.title = `Unit ${u.label}: ${u.title}`;
+  const groups = [];
+  for (const day of u.days) {
+    if (!shows(dayClosed(u, day))) continue;
+    const key = day.extension ? "ext" : day.week;
+    let g = groups.find(x => x.key === key);
+    if (!g) groups.push(g = { key, days: [] });
+    g.days.push(day);
+  }
+  app.innerHTML = `
+    <section class="hero ${unitHidden(u) ? "is-hidden" : ""}">
+      <p class="eyebrow">Unit ${esc(u.label)}</p>
+      <h1>${esc(u.title)}</h1>
+      <p class="lede">${esc(SUMMARY[u.id] || "")}</p>
+    </section>
+    ${teacher.on ? `<section class="tpanel"><p class="label">Teacher</p><div class="row" style="align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap"><span>${unitHidden(u) ? "Students can’t see this unit." : "Students can see this unit."} Hide single days with the buttons below.</span>${eye(u.id, unitHidden(u), "this unit")}</div></section>` : ""}
+    ${groups.map(g => `
+      <section class="week">
+        <p class="label">${g.key === "ext" ? "Extension lessons (optional)" : u.groupLabel || `Week ${g.key}`}</p>
+        <ol class="days">
+          ${g.days.map(day => {
+            const hid = dayClosed(u, day);
+            return `
+            <li class="row ${hid ? "is-hidden" : ""}"><a href="#${dayId(u, day)}">
+              <span class="num">${day.extension ? "Ext. " + day.label.split(" ")[1] : esc(day.label)}</span>
+              <span class="topic">${esc(day.topic)}</span>
+              ${teacher.on && notOpenYet(dayId(u, day)) ? `<span class="chip ext">opens ${opensLabel(dayId(u, day))}</span>` : day.event ? `<span class="chip">${day.event}</span>` : day.extension ? `<span class="chip ext">extension</span>` : liveVideo(u, day) ? `<span class="chip ext">video</span>` : ""}
+            </a>${eye(dayId(u, day), hid, day.label)}</li>`;
+          }).join("")}
+        </ol>
+      </section>`).join("")}`;
+}
+
+function videoCard(v, draftNote) {
+  return `
+    <a class="video" href="${esc(v.url)}" target="_blank" rel="noopener">
+      <span class="play" aria-hidden="true">▶</span>
+      <span class="vt"><small>Video lesson${draftNote ? " · not visible to students yet" : ""}</small><span>${esc(v.title || "Watch the video")}</span></span>
+      <span class="go">YouTube ↗</span>
+    </a>`;
+}
+
+function eventBlock(u, day) {
+  // Quiz, review and test pages list every lesson they cover, even hidden ones, so the videos stay reachable.
+  const covered = coveredBy(u, day);
+  const intro = {
+    quiz: covered.length ? `Today is a quiz on Days ${covered[0].d}–${covered[covered.length - 1].d}. Go back over the videos and practice for these lessons below.` : "Today is a quiz.",
+    review: `Today we review everything from Unit ${u.label} to get ready for the test. For each lesson below, rewatch the video and try the practice questions. Bring your notes, homework and exit tickets, and come with questions.`,
+    test: `Today is the Unit ${u.label} test. Bring a pencil and a calculator. The test covers the lessons below.`
+  }[day.event];
+  const label = { quiz: "Quiz day", review: "Review", test: "Test day" }[day.event];
+  const lessonCard = c => {
+    const v = liveVideo(u, c), id = dayId(u, c), n = (PRACTICE[id] || []).length;
+    const topic = shows(dayHidden(u, c)) ? `<a href="#${id}">${esc(c.topic)}</a>` : esc(c.topic);
+    return `
+      <section class="lcard">
+        <div class="lhead"><span>Day ${c.d}</span><h3>${topic}</h3></div>
+        ${v ? `<a class="vid" href="${esc(v.url)}" target="_blank" rel="noopener">▶ Watch video<span> · ${esc(v.title || "YouTube")}</span></a>` : ""}
+        ${n ? `<details class="pq"><summary>Practice questions (${n})</summary>${practiceList(id)}</details>` : ""}
+      </section>`;
+  };
+  return `
+    <section class="event">
+      <p class="label" style="color:inherit">${label}</p>
+      <p>${esc(intro)}</p>
+    </section>
+    ${covered.length ? `
+    <section class="week">
+      <p class="label">${day.event === "test" ? "Lessons on the test" : "Lessons to review"} · watch the video, then try the practice</p>
+      ${covered.map(lessonCard).join("")}
+    </section>` : ""}`;
+}
+
+function videoEditor(u, day) {
+  const id = dayId(u, day);
+  const v = draft.videos[id] || {};
+  const bad = v.url && !/^https:\/\/(www\.|m\.)?(youtube\.com|youtu\.be)\//.test(v.url);
+  return `
+    <section class="tpanel">
+      <p class="label">Teacher · video for this lesson</p>
+      <label class="field" for="video-url-${id}">YouTube link
+        <input type="url" id="video-url-${id}" data-vid="${id}" data-field="url" value="${esc(v.url || "")}" placeholder="https://www.youtube.com/watch?v=…">
+      </label>
+      ${bad ? `<p class="warn">This doesn’t look like a YouTube link. It will still work as a link if it starts with https://.</p>` : ""}
+      <label class="field" for="video-title-${id}">Title students see
+        <input type="text" id="video-title-${id}" data-vid="${id}" data-field="title" value="${esc(v.title || "")}" placeholder="e.g. Solving two-step equations">
+      </label>
+      <label class="check"><input type="checkbox" id="video-live-${id}" data-vid="${id}" data-field="live" ${v.live ? "checked" : ""} ${v.url ? "" : "disabled"}> Show this video to students</label>
+      ${v.suggested && !v.live ? `<p class="warn">Suggested by Claude. Watch it first, then tick the box if it fits your lesson, or paste a different link.</p>` : ""}
+    </section>`;
+}
+
+function practiceList(id) {
+  return `<ol class="practice">${(PRACTICE[id] || []).map(p => `
+    <li><p>${esc(p.q)}</p><details><summary>Show answer</summary><p>${esc(p.a)}</p></details></li>`).join("")}</ol>`;
+}
+
+function lessonBlock(u, day) {
+  const id = dayId(u, day);
+  const v = S().videos[id];
+  const showVideo = v && v.url && (v.live || teacher.on);
+  const res = day.resources.filter(r => shows(resHidden(u, day, r)));
+  // "Video and practice only" mode drops the objectives and the notes/homework/exit ticket links.
+  const full = !S().videoPracticeOnly;
+  return `
+    ${day.extension ? `<p class="note">This is an optional challenge lesson. Your teacher may assign it if the class is ready.</p>` : ""}
+    ${full ? `
+    <section class="panel">
+      <p class="label">Today’s objective</p>
+      <p class="objective">${esc(day.objective)}</p>
+    </section>` : ""}
+    ${showVideo ? videoCard(v, !v.live) : ""}
+    ${teacher.on ? videoEditor(u, day) : ""}
+    ${PRACTICE[id] ? `
+    <section class="week">
+      <p class="label">Practice · try these, then check your answer</p>
+      ${practiceList(id)}
+    </section>` : ""}
+    ${full && day.language ? `
+    <section class="panel">
+      <p class="label">Language objective</p>
+      <p>${esc(day.language)}</p>
+      ${day.vocab?.length ? `<div class="vocab" aria-label="Key vocabulary">${day.vocab.map(v => `<span>${esc(v)}</span>`).join("")}</div>` : ""}
+    </section>` : ""}
+    ${full && res.length ? `
+    <section class="week">
+      <p class="label">Today’s materials</p>
+      <div class="resources">
+        ${res.map(r => {
+          const hid = resHidden(u, day, r);
+          return `<div class="row ${hid ? "is-hidden" : ""}">
+          <a class="res" href="${esc(r.url)}" target="_blank" rel="noopener">
+            <span class="kind">${esc(r.kind)}</span><span class="name">${esc(r.name)}</span><span class="go">${hid ? "Hidden" : "Open ↗"}</span>
+          </a>${eye(`${id}:${r.kind}`, !!draft.hidden[`${id}:${r.kind}`], r.kind)}</div>`;
+        }).join("")}
+      </div>
+    </section>` : ""}`;
+}
+
+// Prev/next skip anything students can't see.
+function neighbor(u, day, step) {
+  const all = UNITS.flatMap(x => x.days.map(d => [x, d])).filter(([x, d]) => (x === u && d === day) || shows(dayHidden(x, d)));
+  const i = all.findIndex(([x, d]) => x === u && d === day);
+  return all[i + step];
+}
+
+function pagerLink([u, d], cls, arrowLeft, currentUnit) {
+  const where = u === currentUnit ? d.label : `Unit ${u.label} · ${d.label}`;
+  return `<a class="${cls}" href="#${dayId(u, d)}"><small>${arrowLeft ? "← " + esc(where) : esc(where) + " →"}</small>${esc(d.topic)}</a>`;
+}
+
+function renderDay(u, day) {
+  crumbs.innerHTML = `<a href="#home">Home</a><span>/</span><a href="#${u.id}">Unit ${esc(u.label)}</a><span>/</span><span>${esc(day.label)}</span>`;
+  document.title = `Unit ${u.label} ${day.label}: ${day.topic}`;
+  const prev = neighbor(u, day, -1), next = neighbor(u, day, 1);
+  app.innerHTML = `
+    <section class="hero ${dayHidden(u, day) ? "is-hidden" : ""}">
+      <p class="eyebrow">Unit ${esc(u.label)} · ${esc(day.label)}</p>
+      <h1>${esc(day.topic)}</h1>
+    </section>
+    ${teacher.on ? `<section class="tpanel"><div class="row" style="align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap"><span>${unitHidden(u) ? `Unit ${esc(u.label)} is hidden, so students can’t see this day.` : dayHidden(u, day) ? "Students can’t see this day." : "Students can see this day."}</span>${eye(dayId(u, day), !!draft.hidden[dayId(u, day)], "this day")}</div></section>` : ""}
+    ${day.event ? eventBlock(u, day) : lessonBlock(u, day)}
+    <nav class="pager" aria-label="Other days">
+      ${prev ? pagerLink(prev, "", true, u) : `<span></span>`}
+      ${next ? pagerLink(next, "next", false, u) : `<span></span>`}
+    </nav>`;
+}
+
+function renderGone() {
+  crumbs.innerHTML = `<a href="#home">Home</a>`;
+  app.innerHTML = `<section class="gone"><h2>This page isn’t open yet</h2><p class="note" style="margin-top:.5rem">Your teacher hasn’t opened this part of the site. <a href="#home">Go to the class lessons</a>.</p></section>`;
+}
+
+function route(scroll = true) {
+  const h = current.replace("#", "");
+  let done = false;
+  for (const u of UNITS) {
+    if (h === u.id) { unitShown(u) ? renderUnit(u) : renderGone(); done = true; break; }
+    const day = u.days.find(d => h === dayId(u, d));
+    if (day) { shows(dayHidden(u, day)) ? renderDay(u, day) : renderGone(); done = true; break; }
+  }
+  if (!done) renderHome();
+  renderBar();
+  if (scroll) window.scrollTo(0, 0);
+}
+
+// ---- Teacher bar and saving ----
+let bar = null;
+function renderBar() {
+  if (!teacher.allowed) return;
+  if (!bar) { bar = document.createElement("div"); bar.className = "tbar"; document.body.appendChild(bar); document.body.classList.add("has-tbar"); }
+  const n = dirty();
+  bar.innerHTML = `<div class="tbar-in">
+    <span class="msg" role="status">${teacher.error ? esc(teacher.error) : teacher.saving ? "Saving…" : teacher.on ? (n ? "You have unsaved changes. Students see them after you save." : "Teacher view: hidden parts are dimmed.") : "You’re seeing what students see."}</span>
+    ${teacher.on && n ? `<button type="button" id="tb-discard" ${teacher.saving ? "disabled" : ""}>Discard</button><button type="button" class="primary" id="tb-save" ${teacher.saving ? "disabled" : ""}>Save for students</button>` : ""}
+    <button type="button" id="tb-toggle" aria-pressed="${teacher.on}">${teacher.on ? "Preview as student" : "Teacher view"}</button>
+  </div>`;
+}
+
+function pageHtml(settings) {
+  const json = JSON.stringify(settings).replace(/</g, "\\u003c");
+  const code = document.getElementById("app-code").textContent;
+  return SKELETON + SHELL + `<script type="application/json" id="settings">${json}<\/script>\n<script id="app-code">${code}<\/script>\n</body></html>`;
+}
+
+async function save() {
+  if (!teacher.artifact || !dirty()) return;
+  teacher.saving = true; teacher.error = ""; renderBar();
+  ss.set("teacherOn", "1"); ss.set("hash", current); ss.set("draft", null);
+  try {
+    await teacher.artifact.publish(pageHtml(draft));   // every open view reloads to the new version
+  } catch (e) {
+    teacher.saving = false;
+    const code = e && e.code;
+    if (code === "conflict") teacher.error = "A newer version was saved somewhere else. Reloading it now.";
+    else if (code === "not_writer" || code === "not_granted" || code === "not_declared" || code === "capability_disabled") {
+      teacher.error = "You can’t save changes from this view."; teacher.allowed = true;
+    } else if (code === "rate_limited") teacher.error = "Saving too often. Wait a minute, then save again.";
+    else teacher.error = "Saving didn’t work. Check your connection and save again.";
+    ss.set("draft", JSON.stringify(draft));
+    renderBar();
+  }
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.classList.contains("eye")) { setHidden(b.dataset.key, b.getAttribute("aria-pressed") !== "true"); return; }
+  if (b.id === "tb-toggle") { teacher.on = !teacher.on; teacher.error = ""; ss.set("teacherOn", teacher.on ? "1" : null); route(false); }
+  if (b.id === "tb-discard") { draft = structuredClone(saved); ss.set("draft", null); route(false); }
+  if (b.id === "tb-save") save();
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.id === "opt-video-only") { draft.videoPracticeOnly = t.checked; ss.set("draft", JSON.stringify(draft)); route(false); return; }
+  if (t.id === "opt-replace-notes") { draft.videoReplacesNotes = t.checked; ss.set("draft", JSON.stringify(draft)); route(false); return; }
+  if (!t.dataset.vid) return;
+  const id = t.dataset.vid, v = { ...(draft.videos[id] || {}) };
+  if (t.dataset.field === "live") v.live = t.checked;
+  else v[t.dataset.field] = t.value.trim();
+  if (t.dataset.field === "url") delete v.suggested;
+  if (!v.url) { delete draft.videos[id]; } else draft.videos[id] = v;
+  ss.set("draft", JSON.stringify(draft));
+  route(false);
+});
+
+// Navigation is handled in the page instead of by the browser, so the site also works inside
+// embeds (like Google Sites) that block link-based page changes.
+let current = location.hash;
+function go(hash) {
+  current = hash;
+  try { history.pushState(null, "", hash); } catch {}
+  route();
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  go(a.getAttribute("href"));
+});
+window.addEventListener("popstate", () => { current = location.hash; route(); });
+window.addEventListener("hashchange", () => { if (location.hash !== current) { current = location.hash; route(); } });
+// ---- Google Sheet control panel ----
+function parseCSV(text) {
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+      else if (c === '"') q = false;
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(cell); rows.push(row); row = []; cell = "";
+    } else cell += c;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function sheetRecords(text) {
+  if (!text || text.trimStart().startsWith("<")) throw new Error("not csv");   // a sign-in page, not data
+  const [head, ...rows] = parseCSV(text);
+  const key = head.map(h => h.trim().toLowerCase());
+  return rows.map(r => Object.fromEntries(key.map((k, i) => [k, (r[i] || "").trim()])));
+}
+
+async function loadSheet() {
+  const base = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&headers=1&sheet=`;
+  const get = name => fetch(`${base}${encodeURIComponent(name)}&t=${Date.now()}`).then(r => r.ok ? r.text() : Promise.reject(r.status));
+  const timeout = new Promise((_, no) => setTimeout(() => no("timeout"), 6000));
+  const [settingsCsv, practiceCsv] = await Promise.race([Promise.all([get("Settings"), get("Practice").catch(() => null)]), timeout]);
+  const known = new Set(UNITS.flatMap(u => [u.id, ...u.days.map(d => dayId(u, d))]));
+  const next = { hidden: {}, videos: {}, videoReplacesNotes: false };
+  let matched = 0;
+  for (const r of sheetRecords(settingsCsv)) {
+    if (!known.has(r.id)) continue;
+    matched++;
+    if (r["show to students"].toUpperCase() === "FALSE") next.hidden[r.id] = true;
+    if (r["show notes"].toUpperCase() === "FALSE") next.hidden[r.id + ":Notes"] = true;
+    if (/^https?:\/\//.test(r["video link"])) next.videos[r.id] = { url: r["video link"], title: r["video title"], live: true };
+  }
+  if (!matched) throw new Error("no matching rows");
+  saved = next; draft = structuredClone(next);
+  if (practiceCsv) {
+    const p = {};
+    for (const r of sheetRecords(practiceCsv)) if (known.has(r.id) && r.question) (p[r.id] ||= []).push({ q: r.question, a: r.answer });
+    PRACTICE = p;
+  }
+}
+
+if (SHEET_ID) {
+  app.innerHTML = `<p class="note">Loading lessons…</p>`;
+  loadSheet().catch(() => {}).finally(() => route(false));   // on failure, use the settings built into the page
+} else route();
+
+(async () => {
+  if (SHEET_ID) return;   // the sheet is the control panel, so the in-page teacher view is off
+  const user = await window.claude?.use?.("user");
+  if (!(await user?.canEdit())) return;
+  teacher.artifact = await window.claude.use("artifact");
+  if (!teacher.artifact) return;
+  teacher.allowed = true;
+  if (ss.get("teacherOn")) {
+    teacher.on = true;
+    const d = ss.get("draft"); if (d) try { draft = JSON.parse(d); } catch {}
+    const h = ss.get("hash"); ss.set("hash", null);
+    if (h && h !== current) { go(h); return; }
+  }
+  route(false);
+})();
+</script>
+</body></html>
